@@ -1,6 +1,8 @@
 const User = require('../models/user-model');
 const Todo = require('../models/todo-model');
 module.exports = {
+
+
     index: async (req, res, next) => {
         try {
             const users = await User.find({});
@@ -9,6 +11,8 @@ module.exports = {
             next(err)
         }
     },
+
+
     create: async  (req,res , next) => {
         try {
             const newUser = new User(req.body);
@@ -18,6 +22,7 @@ module.exports = {
             next(err)
         }
     },
+
 
     update: async (req,res, next) => {
         try{
@@ -56,11 +61,9 @@ module.exports = {
     todoList: async (req,res, next) => {
         try {
           const {userId} = req.params;
-          const user = await User.findById(userId);
-          const todoList = user.thingsTodo;
+          const user = await User.findById(userId).populate('thingsTodo');
           res.status(200).json({
               user: user,
-              list: todoList
           });
         } catch (err) {
           next(err);
