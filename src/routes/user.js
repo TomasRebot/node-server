@@ -3,7 +3,7 @@ const router = Router();
 
 const UserController = require('../controllers/user-controller');
 const AuthController = require('../controllers/auth-controller');
-//edit
+//list
 router.route('/')
     .get(UserController.index)
     .post(UserController.create);
@@ -21,9 +21,5 @@ router.route('/edit/:userId')
 router.route('/:userId/todo')
     .get(UserController.todoList)
     .post(UserController.addTodo);
-//login
-router.route('/login')
-    .post(AuthController.login);
-
 
 module.exports = router;

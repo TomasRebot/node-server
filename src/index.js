@@ -5,57 +5,50 @@ const mongoose = require('mongoose');
 const app = express();
 const morgan = require('morgan');
 const MongoClient = require('mongodb').MongoClient;
+const config = require('./config');
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-//connect to db local mode
-// mongoose.connect('mongodb://localhost/mcga', (err, res)=>{
-//     if(err) console.log('error trying connect');
-//     else console.log('connection success')
-// });
-
-
-
-//conect to db in production mode
-
-const uri = "mongodb+srv://arfeli:sinpassword@cluster0-twuwn.mongodb.net/test?retryWrites=true&w=majority";
-// const uri = "mongodb+srv://alejandro.arfeli@gmail.com:Thornix22@cluster0-twuwn.mongodb.net/test?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true });
-
+const client = new MongoClient(config.getDb(), { useNewUrlParser: true });
 client.connect(
-  res =>{
-    console.log('db connected ?');
+  (res) =>{
+    console.log('db connected successfully');
   },
-  err => {
-  console.log('error connection');
-  // perform actions on the collection object
+  (err) => {
+  console.log('error db connection', err);
   client.close();
 });
 
-mongoose.connect(uri, (err, res)=>{
-    if(err) console.log('error trying connect');
-    else console.log('connection success')
+mongoose.connect(config.getDb(), (err, res) => {
+    if (err){
+        console.log('mongoose error trying connect');
+    } else{
+        console.log("mongoose connected successfully");
+    }
 });
 
 
 //Set up application
-app.set('port', 3000);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors());
 
-//Set up middlewares
+//Set up middleware's
 app.use(morgan('dev'));
 
 //routes
-app.use('/api/',require('./routes/common.js'));
-app.use('/api/todo',require('./routes/todo.js'));
-app.use('/api/users',require('./routes/user.js'));
+app.use('/api/',require('./routes/common'));
+app.use('/api/todo',require('./routes/todo'));
+app.use('/api/users',require('./routes/user'));
+app.use('/api/auth', require('./routes/authentication'));
 
 //start's server
-app.listen(process.env.PORT || 3000, () =>{
-    console.log("Server runing")
+app.listen(config.port , () =>{
+    console.log(`Server running on port ${config.port}`)
 });
+
+module.exports = app;

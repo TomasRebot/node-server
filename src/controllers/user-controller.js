@@ -69,7 +69,7 @@ module.exports = {
 
     addTodo: async (req ,res ,next) => {
       try{
-          const {userId} = req.params;
+          const { userId } = req.params;
           const newTodo = new Todo(req.body);
           const user = await User.findById(userId);
           newTodo.owner = user;
