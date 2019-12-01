@@ -6,13 +6,15 @@ const app = express();
 const morgan = require('morgan');
 const MongoClient = require('mongodb').MongoClient;
 const config = require('./config');
+const AuthToken = require('./middlewares/auth-token');
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-const client = new MongoClient(config.getDb(), { useNewUrlParser: true });
+
+const client = new MongoClient(config.getDB(), { useNewUrlParser: true });
 client.connect(
   (res) =>{
     console.log('db connected successfully');
@@ -22,7 +24,7 @@ client.connect(
   client.close();
 });
 
-mongoose.connect(config.getDb(), (err, res) => {
+mongoose.connect(config.getDB(), (err, res) => {
     if (err){
         console.log('mongoose error trying connect');
     } else{
@@ -39,6 +41,7 @@ app.use(cors());
 
 //Set up middleware's
 app.use(morgan('dev'));
+app.use(AuthToken);
 
 //routes
 app.use('/api/',require('./routes/common'));

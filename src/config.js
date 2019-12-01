@@ -2,8 +2,9 @@ const dbProduction = "mongodb+srv://tomi:homar666@cluster0-9fmpn.mongodb.net/tes
 const dbLocal = "mongodb://localhost/mcga";
 const environment = "local";
 const port = process.env.PORT || 3000;
+const secretKey = process.env.SECRET_TOKEN || 'mcga-todo-application';
 
-const getDb =  () => {
+const getDB =  () => {
     if(environment === 'local'){
         return dbLocal;
     }else{
@@ -11,10 +12,16 @@ const getDb =  () => {
     }
 };
 
+const getSecret = () => {
+    return secretKey;
+};
+
 module.exports = {
-    dbProduction,
-    dbLocal,
-    environment,
-    port,
-    getDb,
+    dbProduction: "mongodb+srv://tomi:homar666@cluster0-9fmpn.mongodb.net/test?retryWrites=true&w=majority",
+    dbLocal: "mongodb://localhost/mcga",
+    environment: "local",
+    port: process.env.PORT || 3000,
+    secretKey: process.env.SECRET_TOKEN || 'mcga-todo-application',
+    getDB,
+    getSecret
 };
