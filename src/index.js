@@ -39,6 +39,14 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors());
 
+/*
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
+*/
+
+
 //Set up middleware's
 app.use(morgan('dev'));
 app.use(AuthToken);
@@ -50,6 +58,7 @@ app.use('/api/users',require('./routes/user'));
 app.use('/api/auth', require('./routes/authentication'));
 
 //start's server
+console.log(config.port);
 app.listen(config.port , () =>{
     console.log(`Server running on port ${config.port}`)
 });
