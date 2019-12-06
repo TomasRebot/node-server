@@ -21,6 +21,7 @@ module.exports = {
     dbLocal,
     environment,
     port,
+    getDB,
     secretKey,
     getDB,
     getSecret
