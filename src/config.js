@@ -21,5 +21,6 @@ module.exports = {
     dbLocal: "mongodb://localhost/mcga",
     environment: "local",
     port,
+    getDB,
     secretKey,
 };
