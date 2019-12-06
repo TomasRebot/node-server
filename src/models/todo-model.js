@@ -13,7 +13,8 @@ const todoSchema = new Schema({
     },
     owner: {
         type: Schema.Types.ObjectId,
-        ref: 'user'
+        ref: 'user',
+        required: true
     }
 });
 const Todo = mongoose.model('todo', todoSchema);
