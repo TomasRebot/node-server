@@ -21,7 +21,5 @@ module.exports = {
     dbLocal: "mongodb://localhost/mcga",
     environment: "local",
     port,
-    secretKey: process.env.SECRET_TOKEN || 'mcga-todo-application',
-    getDB,
-    getSecret
+    secretKey,
 };
