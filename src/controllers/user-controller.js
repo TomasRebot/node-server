@@ -1,14 +1,16 @@
 const User = require('../models/user-model');
 const Todo = require('../models/todo-model');
+const CommonResponse = require('../models/commonResponse');
 module.exports = {
 
 
     index: async (req, res, next) => {
         try {
             const users = await User.find({});
-            res.status(200).json(users);
+            res.status(200).json(CommonResponse.success(users));
         }catch(err){
-            next(err)
+            res.status(500).json(CommonResponse.internalError(err));
+            next(err);
         }
     },
 
@@ -17,8 +19,9 @@ module.exports = {
         try {
             const newUser = new User(req.body);
             const user = await newUser.save();
-            res.status(201).json(user);
+            res.status(201).json(CommonResponse.success(user));
         }catch(err){
+            res.status(500).json(CommonResponse.internalError(err));
             next(err)
         }
     },
@@ -29,8 +32,9 @@ module.exports = {
             const { userId } = req.params;
             const newUser = req.body;
             const result = await User.findByIdAndUpdate(userId, newUser);
-            res.status(200).json({success:true});
+            res.status(200).json(CommonResponse.success(result));
         }catch(err){
+            res.status(500).json(CommonResponse.internalError(err));
             next(err);
         }
     },
@@ -41,8 +45,9 @@ module.exports = {
         try{
             const { userId } = req.params;
             const user = await User.findById(userId);
-            res.status(200).json(user);
+            res.status(200).json(CommonResponse.success(user));
         }catch(err){
+            res.status(500).json(CommonResponse.internalError(err));
             next(err);
         }
 
@@ -52,8 +57,9 @@ module.exports = {
         try{
             const { userId } = req.params;
             const result = await User.findByIdAndDelete(userId);
-            res.status(200).json('deleted');
+            res.status(200).json(CommonResponse.success(result));
         }catch(err){
+            res.status(500).json(CommonResponse.internalError(err));
             next(err);
         }
     },
@@ -62,11 +68,10 @@ module.exports = {
         try {
           const {userId} = req.params;
           const user = await User.findById(userId).populate('thingsTodo');
-          res.status(200).json({
-              user: user,
-          });
+          res.status(200).json(CommonResponse.success(user));
         } catch (err) {
-          next(err);
+            res.status(500).json(CommonResponse.internalError(err));
+            next(err);
         }
     },
 
@@ -76,11 +81,13 @@ module.exports = {
           const newTodo = new Todo(req.body);
           const user = await User.findById(userId);
           newTodo.owner = user;
-          await newTodo.save();
-          user.thingsTodo.push(newTodo);
-          await user.save();
-          res.status(200).json(newTodo);
+          newTodo.save().then((todo) => {
+              user.thingsTodo.push(todo);
+              user.save().then(u => {res.status(200).json(CommonResponse.success());
+              });
+          });
       }catch(err){
+          res.status(500).json(CommonResponse.internalError(err));
           next(err);
       }
 
@@ -88,3 +95,27 @@ module.exports = {
 
 
 };
+
+
+
+// addTodo: async (req ,res ,next) => {
+//     try{
+//         const { userId } = req.params;
+//         const newTodo = new Todo(req.body);
+//         const user = await User.findById(userId);
+//         newTodo.owner = user;
+//         newTodo.save().then((todo) => {
+//             user.thingsTodo.push(todo);
+//             user.save().then( (user) => {
+//                 User.populate(user,'thingsTodo').then(
+//                     (u) => {
+//                         res.status(200).json(CommonResponse.success(u));
+//                     }
+//                 );
+//             });
+//         }).catch(err => { res.status(500).json(CommonResponse.internalError(err)); } );
+//     }catch(err){
+//         res.status(500).json(CommonResponse.internalError(err));
+//         next(err);
+//     }
+// }

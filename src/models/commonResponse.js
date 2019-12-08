@@ -24,6 +24,7 @@ const CommonResponse = {
             error: false,
             message: 'Success',
             type: 200,
+            data: additional,
         }
     },
 

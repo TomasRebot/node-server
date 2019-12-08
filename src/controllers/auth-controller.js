@@ -22,7 +22,12 @@ module.exports = {
                         if(err){
                             res.status(403).json(CommonResponse.failLogin(err.message));
                         }else{
-                            res.status(200).json(CommonResponse.succededLogin({token:'Bearer '+token, user:user}));
+                            User.populate(user,'thingsTodo').then(
+                        (u) => {
+                                res.status(200).json(CommonResponse.succededLogin({token:'Bearer '+token, user:u}));
+                            },
+                            (err) => {res.status(500).json(CommonResponse.internalError(err))}
+                            );
                         }
                     });
                 }else{
@@ -35,9 +40,7 @@ module.exports = {
     },
 
 
-    logout: async (req,res,next) => {
-
-    },
+    logout: async (req,res,next) => { return next(req)},
 
 
 };
