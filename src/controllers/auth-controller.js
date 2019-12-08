@@ -2,6 +2,8 @@ const User = require('../models/user-model');
 const bcrypt = require('bcryptjs');
 const config = require('../config');
 const jwt = require('jsonwebtoken');
+const CommonResponse = require('../models/commonResponse');
+
 
 module.exports = {
     login: async (req, res, next) => {
@@ -9,7 +11,7 @@ module.exports = {
             const email = req.body.email;
             const password = req.body.password;
             const user = await User.findOne({email:email});
-            if(!user) return res.status(404).json({message: "This records doesn't match with our's records"});
+            if(!user) return res.status(401).json(CommonResponse.failLogin());
             bcrypt.compare(password, user.password).then( match => {
                 if(match) {
                     let payload = {
@@ -18,20 +20,15 @@ module.exports = {
                     };
                     jwt.sign( payload ,config.getSecret(), (err, token) => {
                         if(err){
-                            res.status(403).json({
-                                message: 'forbidden',
-                                token: err.message
-                            })
+                            res.status(403).json(CommonResponse.failLogin(err.message));
                         }else{
-                            res.status(200).json({
-                                message: 'success',
-                                token: 'Bearer '+token,
-                            });
-
+                            res.status(200).json(CommonResponse.succededLogin({token:'Bearer '+token, user:user}));
                         }
                     });
+                }else{
+                    return res.status(401).json(CommonResponse.failLogin());
                 }
-            }).catch(err => {res.status(500).json(err)});
+            }).catch(err => {res.status(500).json(CommonResponse.internalError(err))});
         } catch (err) {
             next(err);
         }
