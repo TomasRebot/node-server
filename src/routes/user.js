@@ -21,5 +21,7 @@ router.route('/edit/:userId')
 router.route('/:userId/todo')
     .get(UserController.todoList)
     .post(UserController.addTodo);
+router.route('/users/public')
+    .get(UserController.userCount);
 
 module.exports = router;

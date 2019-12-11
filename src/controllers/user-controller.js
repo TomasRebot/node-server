@@ -91,7 +91,17 @@ module.exports = {
           next(err);
       }
 
-    }
+    },
+
+    userCount: async (req, res, next) => {
+        try {
+            const countUsers = await User.count({});
+            res.status(200).json(CommonResponse.success(countUsers));
+        }catch(err){
+            res.status(500).json(CommonResponse.internalError(err));
+            next(err);
+        }
+    },
 
 
 };

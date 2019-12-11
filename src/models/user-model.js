@@ -28,9 +28,7 @@ userSchema.pre('save', function (next) {
     });
 });
 
-userSchema.methods.addToken = function(token) {
-    return this.token + token;
-};
+
 
 
 const User = mongoose.model('user', userSchema);
