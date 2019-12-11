@@ -2,11 +2,16 @@ const { Router } = require('express');
 const router = Router();
 
 const UserController = require('../controllers/user-controller');
-const AuthController = require('../controllers/auth-controller');
+
 //list
 router.route('/')
     .get(UserController.index)
     .post(UserController.create);
+
+//count list public users
+router.route('/list')
+    .get(UserController.usersCount);
+
 //show and delete
 router.route('/:userId')
     .get(UserController.show)
@@ -21,7 +26,6 @@ router.route('/edit/:userId')
 router.route('/:userId/todo')
     .get(UserController.todoList)
     .post(UserController.addTodo);
-router.route('/users/public')
-    .get(UserController.userCount);
+
 
 module.exports = router;
