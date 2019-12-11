@@ -7,6 +7,7 @@ const userSchema = new Schema({
     lastName: String,
     password: { type: String, required: true},
     email: {type: String, unique:true},
+    token: String,
     thingsTodo:[{
         type: Schema.Types.ObjectId,
         ref:'todo'
@@ -26,6 +27,10 @@ userSchema.pre('save', function (next) {
         }).catch(err => {next(err)});
     });
 });
+
+userSchema.methods.addToken = function(token) {
+    return this.token + token;
+};
 
 
 const User = mongoose.model('user', userSchema);
