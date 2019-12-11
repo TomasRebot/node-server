@@ -24,7 +24,6 @@ module.exports = {
                         }else{
                             User.populate(user,'thingsTodo').then(
                         (u) => {
-                                u.setToken(token);
                                 res.status(200).json(CommonResponse.succededLogin({user:u}));
                             },
                             (err) => {res.status(500).json(CommonResponse.internalError(err))}
