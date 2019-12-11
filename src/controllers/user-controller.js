@@ -95,8 +95,8 @@ module.exports = {
 
     userCount: async (req, res, next) => {
         try {
-            const countUsers = await User.count({});
-            res.status(200).json(CommonResponse.success(countUsers));
+            const countUsers = await User.countDocuments({});
+            res.status(200).json(CommonResponse.success(users.length));
         }catch(err){
             res.status(500).json(CommonResponse.internalError(err));
             next(err);
