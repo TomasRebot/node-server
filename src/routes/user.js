@@ -22,6 +22,7 @@ router.route('/create')
 //edit
 router.route('/edit/:userId')
     .post(UserController.update);
+    
 //add todo
 router.route('/:userId/todo')
     .get(UserController.todoList)

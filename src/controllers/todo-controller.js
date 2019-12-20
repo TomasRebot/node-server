@@ -1,5 +1,7 @@
 const Todo = require('../models/todo-model');
 const User = require('../models/user-model');
+const CommonResponse = require('../models/commonResponse');
+
 module.exports = {
     index: async (req, res, next) => {
         try {
@@ -36,7 +38,7 @@ module.exports = {
         try{
             const { todoId } = req.params;
             const todo = await Todo.findById(todoId);
-            res.status(200).json(todo);
+          res.status(200).json(CommonResponse.success(todo));
         }catch(err){
             next(err);
         }

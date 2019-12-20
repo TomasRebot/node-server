@@ -22,12 +22,7 @@ module.exports = {
                         if(err){
                             res.status(403).json(CommonResponse.failLogin(err.message));
                         }else{
-                            User.populate(user,'thingsTodo').then(
-                        (u) => {
-                                res.status(200).json(CommonResponse.succededLogin({user:u, token:token}));
-                            },
-                            (err) => {res.status(500).json(CommonResponse.internalError(err))}
-                            );
+                           res.status(200).json(CommonResponse.succededLogin({user:user, token:token}));
                         }
                     });
                 }else{
