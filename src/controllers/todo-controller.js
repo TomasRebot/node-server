@@ -15,7 +15,7 @@ module.exports = {
         try {
             const newTodo = new Todo(req.body);
             const todo = await newTodo.save();
-            res.status(200).json(CommonResponse.success(todo));
+            res.status(200).json(CommonResponse.success(newTodo));
         }catch(err){
             next(err)
         }
